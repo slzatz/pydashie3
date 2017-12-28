@@ -1,6 +1,5 @@
 bin/
 lib/
-lib64/
 include/
 *.pyc
 *.swp
@@ -9,4 +8,4 @@ include/
 settings.py
 config.py
 config.js
-
+lib64
