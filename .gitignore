@@ -1,6 +1,11 @@
+bin/
+lib/
+lib64/
+include/
 *.pyc
 *.swp
 *.txt
+*.cfg
 settings.py
 config.py
 config.js
