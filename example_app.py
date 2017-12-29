@@ -1,5 +1,6 @@
 #from example_samplers import *
 from example_samplers_sz import *
+from config import port
 
 def run(app, xyzzy):
     samplers = [
@@ -14,7 +15,7 @@ def run(app, xyzzy):
 
     try:
         app.run(debug=True,
-                port=5000,
+                port=port,
                 threaded=True,
                 use_reloader=False,
                 use_debugger=True
