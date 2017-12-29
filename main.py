@@ -111,6 +111,8 @@ xyzzy.stopped = False
 
 @app.route('/events')
 def events():
+    print("in events")
+    print(xyzzy.events_queue)
     if xyzzy.using_events:
         event_stream_port = request.environ['REMOTE_PORT']
         current_event_queue = queue.Queue()
