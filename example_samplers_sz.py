@@ -14,13 +14,12 @@ from config import tide_key, news_key, aws_mqtt_uri as aws_host, slz_twitter_oau
 
 twit = twitter.Twitter(auth=twitter.OAuth(slz_twitter_oauth_token, slz_twitter_oauth_token_secret, slz_twitter_CONSUMER_KEY, slz_twitter_CONSUMER_SECRET))
 
-home = expanduser('~')
-#sys.path =  sys.path + [os.path.join(home,'sqlalchemy','lib')] + [os.path.join(home, 'twitter')] + [os.path.join(home, 'mylistmanager3')]
-sys.path =  sys.path + [os.path.join(home, 'twitter')] + [os.path.join(home, 'mylistmanager3')]
+home_dir = expanduser('~')
+sys.path =  sys.path + [os.path.join(home_dir, 'mylistmanager3')]
 
 from lmdb_p import Task, Context, remote_session, func
 
-# all the imports below are related to accessing google calendar
+# google calendar stuff
 import httplib2
 from dateutil import parser
 from apiclient import discovery
@@ -28,12 +27,13 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
-home_dir = os.path.expanduser('~')
 credential_dir = os.path.join(home_dir, '.credentials')
 credential_path = os.path.join(credential_dir, 'google-calendar.json')
 store = Storage(credential_path)
 credentials = store.get()
+####### end google calendar ##########################
 
+# msft exchange stuff
 from config import aws_mqtt_uri as aws_host, exch_name, exch_pw, email
 from pytz import timezone
 from exchangelib import Account, EWSDateTime, credentials as exchange_credentials, errors as exchange_errors
@@ -43,10 +43,12 @@ cred = exchange_credentials.Credentials(username=exch_name, password=exch_pw)
 account = Account(primary_smtp_address=email, credentials=cred, autodiscover=True, access_type=exchange_credentials.DELEGATE)
 calendar = account.calendar
 eastern = timezone('US/Eastern')
+######## end msft exchange stuff ######################
 
 class SynergySampler(DashieSampler):
     def __init__(self, *args, **kwargs):
-        DashieSampler.__init__(self, *args, **kwargs)
+        #DashieSampler.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._last = 0
 
     def name(self):
@@ -60,6 +62,9 @@ class SynergySampler(DashieSampler):
         return s
 
 class BuzzwordsSampler(DashieSampler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def name(self):
         return 'buzzwords'
 
@@ -76,13 +81,14 @@ class BuzzwordsSampler(DashieSampler):
         return {'items':items}
 
 class ConvergenceSampler(DashieSampler):
-    def name(self):
-        return 'convergence'
-
     def __init__(self, *args, **kwargs):
         self.seedX = 0
         self.items = collections.deque()
-        DashieSampler.__init__(self, *args, **kwargs)
+        #DashieSampler.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
+
+    def name(self):
+        return 'convergence'
 
     def sample(self):
         self.items.append({'x': self.seedX,
@@ -137,6 +143,9 @@ class CalendarSampler(DashieSampler):
         return({"items":text})
 
 class IndustrySampler(DashieSampler):
+    def __init__(self, *args, **kwargs):
+        print(__class__)
+        super().__init__(*args, **kwargs)
 
     def name(self):
         return 'industry'
