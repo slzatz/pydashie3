@@ -1,6 +1,8 @@
 bin/
 lib/
 include/
+share/
+twitter/
 *.pyc
 *.swp
 *.txt
