@@ -1,5 +1,6 @@
 #from example_samplers import *
 from example_samplers_sz import *
+from salesforce import SalesforceSampler
 from config import port
 
 def run(app, xyzzy):
@@ -10,7 +11,8 @@ def run(app, xyzzy):
         CalendarSampler(xyzzy, 600),
         IndustrySampler(xyzzy,10),
         TwitterSampler(xyzzy, 300),
-        OutlookSampler(xyzzy, 300)
+        OutlookSampler(xyzzy, 300,)
+        SalesforceSampler(xyzzy, 300)
     ]
 
     try:
