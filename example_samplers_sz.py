@@ -140,7 +140,7 @@ class CalendarSampler(DashieSampler):
 
             text.append({"label":item, "value":""})
 
-        return({"items":text})
+        return {"items":text}
 
 class IndustrySampler(DashieSampler):
     def __init__(self, *args, **kwargs):
@@ -207,11 +207,6 @@ class OutlookSampler(DashieSampler):
         dt = now + timedelta(inc_days)
         print("dt =",dt)
         # below a problem at the end of the month
-        #items = calendar.view(start=eastern.localize(EWSDateTime(now.year, now.month, now.day+next_)), end=eastern.localize(EWSDateTime(now.year, now.month, now.day+next_+1)))
-        #below works
-        #items = calendar.view(start=eastern.localize(EWSDateTime(now.year, now.month, now.day+next_)), end=eastern.localize(EWSDateTime(now.year, now.month, now.day+next_, now.hour+10)))
-
-        #items = calendar.view(start=eastern.localize(EWSDateTime(now.year, now.month, now.day+next_), 1), end=eastern.localize(EWSDateTime(now.year, now.month, now.day+next_, 23)))
         items = calendar.view(start=eastern.localize(EWSDateTime(dt.year, dt.month, dt.day, 1)), end=eastern.localize(EWSDateTime(dt.year, dt.month, dt.day, 23)))
 
         try:
@@ -248,4 +243,5 @@ class OutlookSampler(DashieSampler):
 
 
 
-        return({"items":text})
+        return {"items":text}
+
