@@ -11,13 +11,14 @@ def run(app, xyzzy):
         CalendarSampler(xyzzy, 600),
         IndustrySampler(xyzzy,10),
         TwitterSampler(xyzzy, 300),
-        OutlookSampler(xyzzy, 300,)
+        OutlookSampler(xyzzy, 300,),
         SalesforceSampler(xyzzy, 300)
     ]
 
     try:
         app.run(debug=True,
                 port=port,
+                host = '0.0.0.0',
                 threaded=True,
                 use_reloader=False,
                 use_debugger=True

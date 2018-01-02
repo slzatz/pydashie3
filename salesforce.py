@@ -16,9 +16,9 @@ import pandas as pd
 import requests
 from tabulate import tabulate
 import math
-import paho.mqtt.publish as mqtt_publish
+#import paho.mqtt.publish as mqtt_publish
 import json
-import schedule
+#import schedule
 from time import sleep
 from config import aws_mqtt_uri as aws_host, sf_id, sf_pw
 import csv
@@ -61,7 +61,8 @@ class SalesforceSampler(DashieSampler):
         expected_amount = millify(sm['Amount Open Expected'])
         forecast = millify(sm['Current Forecast'])
         previous_forecast = millify(prev_day.get('forecast', 'not available')) 
-        previous_closed = millify(prev_day.get('closed', 'not available'))
+        #previous_closed = millify(prev_day.get('closed', 'not available'))
+        previous_closed = 0
         closed = millify(sm['Amount Closed'])
         print("Expected Amount: ", expected_amount)
         print("Previous Forecast: ", previous_forecast)
@@ -75,14 +76,17 @@ class SalesforceSampler(DashieSampler):
             color ='{}'
 
         if prev_day.get('closed'):
-            color1 = '{green}' if sm['Amount Closed'] > prev_day['closed'] else '{red}' if sm['Amount Closed'] < prev_day['closed'] else '{}'
+            #color1 = '{green}' if sm['Amount Closed'] > prev_day['closed'] else '{red}' if sm['Amount Closed'] < prev_day['closed'] else '{}'
+            color1 = '<span style="color:green">' if sm['Amount Closed'] > prev_day['closed'] else '<span style="color:red">' if sm['Amount Closed'] < prev_day['closed'] else '<span style="color:white">'
         else:
-            color1 ='{}'
+            color1 ='{<span style="color:white">}'
+            #color1 ='{}'
 
         data = {"header":"Forecast",
                 "text":["expected amount: {}".format(expected_amount),
                         "forecast: {}{}{{}} v. {}".format(color,forecast,previous_forecast),
-                        "closed: {}{}{{}} v. {}".format(color1,closed,previous_closed)],
+                        #"closed: {}{}{{}} v. {}".format(color1,closed,previous_closed)],
+                        'closed: {}{}</span> v. {}'.format(color1,closed,previous_closed)],
                         "dest":(15,230),
                         "pos":5} 
 
@@ -160,39 +164,5 @@ def top_opportunities():
             "dest":(395,10),
             "pos":11}
 
-    mqtt_publish.single('esp_tft', json.dumps(data), hostname=aws_host, retain=False, port=1883, keepalive=60)
-
-schedule.every().hour.at(':03').do(sales_forecast)
-schedule.every().hour.at(':08').do(sales_forecast)
-schedule.every().hour.at(':13').do(sales_forecast)
-schedule.every().hour.at(':18').do(sales_forecast)
-schedule.every().hour.at(':23').do(sales_forecast)
-schedule.every().hour.at(':28').do(sales_forecast)
-schedule.every().hour.at(':33').do(sales_forecast)
-schedule.every().hour.at(':38').do(sales_forecast)
-schedule.every().hour.at(':43').do(sales_forecast)
-schedule.every().hour.at(':48').do(sales_forecast)
-schedule.every().hour.at(':53').do(sales_forecast)
-schedule.every().hour.at(':58').do(sales_forecast)
-
-schedule.every().hour.at(':01').do(top_opportunities)
-schedule.every().hour.at(':06').do(top_opportunities)
-schedule.every().hour.at(':11').do(top_opportunities)
-schedule.every().hour.at(':16').do(top_opportunities)
-schedule.every().hour.at(':21').do(top_opportunities)
-schedule.every().hour.at(':26').do(top_opportunities)
-schedule.every().hour.at(':31').do(top_opportunities)
-schedule.every().hour.at(':36').do(top_opportunities)
-schedule.every().hour.at(':41').do(top_opportunities)
-schedule.every().hour.at(':46').do(top_opportunities)
-schedule.every().hour.at(':51').do(top_opportunities)
-schedule.every().hour.at(':56').do(top_opportunities)
-
-schedule.every().day.at("1:30").do(get_prev_day)
-#schedule.run_all()
-
-while True:
-    schedule.run_pending()
-    sleep(1)
-
+    #mqtt_publish.single('esp_tft', json.dumps(data), hostname=aws_host, retain=False, port=1883, keepalive=60)
 
